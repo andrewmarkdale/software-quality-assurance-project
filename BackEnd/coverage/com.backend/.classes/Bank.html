@@ -1,0 +1,466 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Bank</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.backend</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Bank (com.backend)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Bank</td>
+<td class="coverageStat">
+  <span class="percent">
+    37.5%
+  </span>
+  <span class="absValue">
+    (3/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10.9%
+  </span>
+  <span class="absValue">
+    (17/ 156)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Bank$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (3/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    10.8%
+  </span>
+  <span class="absValue">
+    (17/ 158)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.backend;
+<i>2</i>&nbsp;import java.io.*;
+<i>3</i>&nbsp;import java.math.BigDecimal;
+<i>4</i>&nbsp;import java.math.RoundingMode;
+<i>5</i>&nbsp;import java.util.*;
+<i>6</i>&nbsp;import java.text.DecimalFormat;
+<b class="fc"><i>7</i>&nbsp;public class Bank {</b>
+<b class="fc"><i>8</i>&nbsp;    public List&lt;Account&gt; allAccounts = new ArrayList&lt;Account&gt;();</b>
+<b class="fc"><i>9</i>&nbsp;    public static List&lt;Transaction&gt; allTransactions = new ArrayList&lt;Transaction&gt;();</b>
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;    public static void mergeFiles(String dirToMerge, String outputFile) throws IOException {
+<i>12</i>&nbsp;        // Directory to loop through (replace with your own to test)
+<b class="fc"><i>13</i>&nbsp;        File dir = new File(dirToMerge);</b>
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;        // Output file is created in \\SQA_Bank_Back_End
+<b class="fc"><i>16</i>&nbsp;        PrintWriter writer = new PrintWriter(outputFile);</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;        // String array for list of files
+<b class="fc"><i>19</i>&nbsp;        String[] fileNames = dir.list();</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;        // Go through all files in dir
+<b class="fc"><i>22</i>&nbsp;        for (String fileName : fileNames) {</b>
+<b class="fc"><i>23</i>&nbsp;            System.out.println(&quot;Reading from &quot; + fileName);</b>
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;            // Instantiates new file to be used and create a bufferedreader
+<b class="fc"><i>26</i>&nbsp;            File currFile = new File(dir, fileName);</b>
+<b class="fc"><i>27</i>&nbsp;            BufferedReader br = new BufferedReader(new FileReader(currFile));</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;            // Read from currFile
+<b class="fc"><i>30</i>&nbsp;            String line = br.readLine();</b>
+<b class="fc"><i>31</i>&nbsp;            while (line != null) {</b>
+<i>32</i>&nbsp;                // Write each line to the output file
+<b class="fc"><i>33</i>&nbsp;                writer.println(line);</b>
+<b class="fc"><i>34</i>&nbsp;                line = br.readLine();</b>
+<i>35</i>&nbsp;            }
+<b class="fc"><i>36</i>&nbsp;            writer.flush();</b>
+<i>37</i>&nbsp;        }
+<b class="fc"><i>38</i>&nbsp;        System.out.println(&quot;Finished reading from &quot; + dir.getName());</b>
+<b class="fc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    // This method reads the master bank account file from the previous day and stores all the accounts in a list as
+<i>42</i>&nbsp;    // account objects
+<i>43</i>&nbsp;    public static List&lt;Account&gt; readAccounts(String masterFile) throws FileNotFoundException {
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;        // This variable unparsedAccounts will contain all the account information in an unparsed string format
+<b class="nc"><i>46</i>&nbsp;        List&lt;String&gt; unparsedAccounts = new ArrayList&lt;String&gt;();</b>
+<b class="nc"><i>47</i>&nbsp;        List&lt;Account&gt; returnAccounts = new ArrayList&lt;Account&gt;();</b>
+<i>48</i>&nbsp;        // This scanner will read through the master account file and insert every account into unparsedAccounts
+<b class="nc"><i>49</i>&nbsp;        Scanner scanner = new Scanner(new File(masterFile));</b>
+<b class="nc"><i>50</i>&nbsp;        while (scanner.hasNextLine()) {</b>
+<b class="nc"><i>51</i>&nbsp;            unparsedAccounts.add(scanner.nextLine());</b>
+<i>52</i>&nbsp;        }
+<b class="nc"><i>53</i>&nbsp;        scanner.close();</b>
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;        // Looping through every account in unparsedAccounts, parsing the information from each account, and storing
+<i>56</i>&nbsp;        // the account information in an account object
+<b class="nc"><i>57</i>&nbsp;        for (int i = 0; i &lt; unparsedAccounts.size(); i++) {</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;            // Creating a new String array for the parsed account information; since each string from unparsedAccounts
+<i>60</i>&nbsp;            // has a fixed length of 42 characters, we can get the account information through substrings
+<b class="nc"><i>61</i>&nbsp;            String[] currentAccount = { unparsedAccounts.get(i).substring(0, 5),</b>
+<b class="nc"><i>62</i>&nbsp;                                        unparsedAccounts.get(i).substring(6, 26),</b>
+<b class="nc"><i>63</i>&nbsp;                                        unparsedAccounts.get(i).substring(27, 29),</b>
+<b class="nc"><i>64</i>&nbsp;                                        unparsedAccounts.get(i).substring(29, 38),</b>
+<b class="nc"><i>65</i>&nbsp;                                        unparsedAccounts.get(i).substring(39, 42) };</b>
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;            // Creating a new Account object
+<b class="nc"><i>68</i>&nbsp;            Account newAccount = new Account(Integer.parseInt(currentAccount[0]), currentAccount[1].trim(),</b>
+<b class="nc"><i>69</i>&nbsp;                                             currentAccount[2], Float.parseFloat(currentAccount[3]),</b>
+<b class="nc"><i>70</i>&nbsp;                                             Integer.parseInt(currentAccount[4]));</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;            // Adding the account to the list of account objects
+<b class="nc"><i>73</i>&nbsp;            returnAccounts.add(newAccount);</b>
+<i>74</i>&nbsp;        }
+<b class="nc"><i>75</i>&nbsp;        return returnAccounts;</b>
+<i>76</i>&nbsp;    }
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    // This method loops through the updated account objects and writes the new information to the new Master Bank
+<i>79</i>&nbsp;    // Accounts File
+<i>80</i>&nbsp;    public List&lt;Account&gt; exportNewAccounts(List&lt;Account&gt; accounts, String fileName) throws IOException {
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;        // Opening the new Master Bank Accounts File to write to
+<b class="nc"><i>83</i>&nbsp;        PrintWriter newMasterAccountsFile = new PrintWriter(fileName, &quot;UTF-8&quot;);</b>
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;        // Looping through each account object in the allAccounts list
+<b class="nc"><i>86</i>&nbsp;        for (int i = 0; i &lt; accounts.size(); i++) {</b>
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;            // A string that will hold all the account information and will be used when writing to the new Master
+<i>89</i>&nbsp;            // Bank Accounts File
+<b class="nc"><i>90</i>&nbsp;            String accountToString = &quot;&quot;;</b>
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;            // A string for the account number; the length of the account number will always be five, so we only need
+<i>93</i>&nbsp;            // to add a space at the end
+<b class="nc"><i>94</i>&nbsp;            String accountNumber = Integer.toString(accounts.get(i).getNumber());</b>
+<b class="nc"><i>95</i>&nbsp;            for(int j = accountNumber.length(); j &lt; 5; j++){</b>
+<b class="nc"><i>96</i>&nbsp;                accountNumber = &quot;0&quot; + accountNumber;</b>
+<i>97</i>&nbsp;            }
+<b class="nc"><i>98</i>&nbsp;            accountNumber += &quot; &quot;;</b>
+<i>99</i>&nbsp;            
+<i>100</i>&nbsp;            // Appending the account number to the accountToString variable
+<b class="nc"><i>101</i>&nbsp;            accountToString += accountNumber;</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;            // A string for the account name
+<b class="nc"><i>104</i>&nbsp;            String accountName = accounts.get(i).getName();</b>
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;            // Appending the account name to the accountToString variable
+<b class="nc"><i>107</i>&nbsp;            accountToString += accountName;</b>
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;            // Looping through the remaining number of characters that need to be spaces in the accountName string to
+<i>110</i>&nbsp;            // fit the required format for the Master Bank Accounts File. Looping through 21 times instead of 20 to
+<i>111</i>&nbsp;            // account for the extra space needed at the end
+<b class="nc"><i>112</i>&nbsp;            for (int j = 0; j &lt; 21 - accountName.length(); j++) {</b>
+<b class="nc"><i>113</i>&nbsp;                accountToString += &quot; &quot;;</b>
+<i>114</i>&nbsp;            }
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;            // A string for the account status
+<b class="nc"><i>117</i>&nbsp;            String accountStatus = accounts.get(i).getAccountStatus();// + &quot; &quot;;</b>
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;            // Appending the account status to the accountToString variable
+<b class="nc"><i>120</i>&nbsp;            accountToString += accountStatus;</b>
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;            // A string for the account number
+<b class="nc"><i>123</i>&nbsp;            String accountBalance = Float.toString(accounts.get(i).getBalance());</b>
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;            // Looping through the remaining characters that need to be zero at the front of the accountBalance string
+<b class="nc"><i>126</i>&nbsp;            for (int j = accountBalance.length(); j &lt; 7; j++) {</b>
+<b class="nc"><i>127</i>&nbsp;                accountBalance = &quot;0&quot; + accountBalance;</b>
+<i>128</i>&nbsp;            }
+<b class="nc"><i>129</i>&nbsp;            if(accountBalance.length() &lt; 8){</b>
+<b class="nc"><i>130</i>&nbsp;                accountBalance += &quot;0&quot;;</b>
+<i>131</i>&nbsp;            }
+<i>132</i>&nbsp;            
+<i>133</i>&nbsp;
+<i>134</i>&nbsp;            // Appending the account balance to the accountToString variable with a space an extra space at the end to
+<i>135</i>&nbsp;            // allow for proper formatting in the Master Bank Accounts File
+<b class="nc"><i>136</i>&nbsp;            accountToString += accountBalance + &quot; &quot;;</b>
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;            // A string for the account transaction count
+<b class="nc"><i>139</i>&nbsp;            String accountTransactions = Integer.toString(accounts.get(i).getTransactions());</b>
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;            // Looping through the remaining characters that need to be zero at the front of accountTransactions
+<b class="nc"><i>142</i>&nbsp;            for (int j = accountTransactions.length(); j &lt; 4; j++) {</b>
+<b class="nc"><i>143</i>&nbsp;                accountTransactions = &quot;0&quot; + accountTransactions;</b>
+<i>144</i>&nbsp;            }
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;            // Appending the account transaction count to the accountToString variable
+<b class="nc"><i>147</i>&nbsp;            accountToString += accountTransactions;</b>
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;            // Writing the account to the new Master Bank Accounts File
+<b class="nc"><i>150</i>&nbsp;            newMasterAccountsFile.println(accountToString);</b>
+<i>151</i>&nbsp;        }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;        // Closing the new Master Bank Accounts File
+<b class="nc"><i>154</i>&nbsp;        newMasterAccountsFile.close();</b>
+<b class="nc"><i>155</i>&nbsp;        return accounts;</b>
+<i>156</i>&nbsp;    }
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    public static List&lt;Transaction&gt; readTransactions(String transactionFile) throws FileNotFoundException {
+<b class="nc"><i>159</i>&nbsp;        List&lt;String&gt; unparsedTransactions = new ArrayList&lt;String&gt;();</b>
+<b class="nc"><i>160</i>&nbsp;        List&lt;Transaction&gt; returnTransaction = new ArrayList&lt;Transaction&gt;();</b>
+<b class="nc"><i>161</i>&nbsp;        Scanner scanner = new Scanner(new File(transactionFile));</b>
+<b class="nc"><i>162</i>&nbsp;        while (scanner.hasNextLine()) {</b>
+<b class="nc"><i>163</i>&nbsp;            unparsedTransactions.add(scanner.nextLine());</b>
+<i>164</i>&nbsp;        }
+<b class="nc"><i>165</i>&nbsp;        scanner.close();</b>
+<i>166</i>&nbsp;
+<b class="nc"><i>167</i>&nbsp;        for (int i = 0; i &lt; unparsedTransactions.size(); i++) {</b>
+<i>168</i>&nbsp;
+<i>169</i>&nbsp;            // Creating a new String array for the parsed account information;
+<b class="nc"><i>170</i>&nbsp;            String[] currentTransaction = Transaction.spliceTransaction(unparsedTransactions.get(i));</b>
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;            // Creating a new Account object
+<b class="nc"><i>173</i>&nbsp;            Transaction newTransaction = new Transaction(currentTransaction[0], currentTransaction[1], currentTransaction[2],</b>
+<i>174</i>&nbsp;                    currentTransaction[3], currentTransaction[4]);
+<i>175</i>&nbsp;
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;            // Adding the account to the list of account objects
+<b class="nc"><i>178</i>&nbsp;            if (newTransaction.validateTransaction(currentTransaction[0], currentTransaction[1], currentTransaction[2],</b>
+<i>179</i>&nbsp;                    currentTransaction[3], currentTransaction[4])) {
+<b class="nc"><i>180</i>&nbsp;                returnTransaction.add(newTransaction);</b>
+<i>181</i>&nbsp;            } else {
+<b class="nc"><i>182</i>&nbsp;                System.out.print(&quot;ERROR: Occurred with following transaction: &quot;);</b>
+<b class="nc"><i>183</i>&nbsp;                System.out.print(currentTransaction[0] + &quot; &quot; + currentTransaction[1] + &quot; &quot; + currentTransaction[2]</b>
+<i>184</i>&nbsp;                        + &quot; &quot; + currentTransaction[3] + &quot; &quot; + currentTransaction[4] + &quot;\n&quot;);
+<i>185</i>&nbsp;            }
+<i>186</i>&nbsp;
+<i>187</i>&nbsp;        }
+<i>188</i>&nbsp;
+<b class="nc"><i>189</i>&nbsp;        System.out.println(&quot;Finished parsing transactions&quot;);</b>
+<b class="nc"><i>190</i>&nbsp;        return returnTransaction;</b>
+<i>191</i>&nbsp;    }
+<i>192</i>&nbsp;    private static float roundFloat(float f, int places){
+<b class="nc"><i>193</i>&nbsp;        BigDecimal bigDecimal = new BigDecimal(Float.toString(f));</b>
+<b class="nc"><i>194</i>&nbsp;        bigDecimal = bigDecimal.setScale(places, RoundingMode.HALF_UP);</b>
+<b class="nc"><i>195</i>&nbsp;        return bigDecimal.floatValue();</b>
+<i>196</i>&nbsp;    }
+<i>197</i>&nbsp;    public static List&lt;Account&gt; applyTransactions(List&lt;Account&gt; accounts, List&lt;Transaction&gt; transactions){
+<i>198</i>&nbsp;        // Setting debits to be applied dependent on whether the account is student or normal plan
+<b class="nc"><i>199</i>&nbsp;        float studentDebit = 0.05f;</b>
+<b class="nc"><i>200</i>&nbsp;        float normalDebit = 0.10f;</b>
+<b class="nc"><i>201</i>&nbsp;        boolean transferLast = false;</b>
+<b class="nc"><i>202</i>&nbsp;        List&lt;Account&gt; newAccountList = new ArrayList&lt;Account&gt;();</b>
+<i>203</i>&nbsp;        // Looping through each transaction in the transaction list obtained from file
+<b class="nc"><i>204</i>&nbsp;        for(Transaction transaction: transactions){</b>
+<i>205</i>&nbsp;            // Looping through each account in accounts list obtained from file
+<b class="nc"><i>206</i>&nbsp;            for(int i = 0; i &lt; accounts.size(); i++)/*for(Account account: accounts)*/ {</b>
+<i>207</i>&nbsp;                // Getting the current account
+<b class="nc"><i>208</i>&nbsp;                Account account = accounts.get(i);</b>
+<i>209</i>&nbsp;                
+<i>210</i>&nbsp;                // The transaction amount specified in the transaction &amp; current balance obtained from account.
+<b class="nc"><i>211</i>&nbsp;                float transactionAmount = Integer.parseInt(transaction.getFunds().trim());</b>
+<b class="nc"><i>212</i>&nbsp;                float currentBalance = account.getBalance();</b>
+<i>213</i>&nbsp;                // If the details from the transaction matches the details from the account (name &amp; num)
+<b class="nc"><i>214</i>&nbsp;                if (Integer.parseInt(transaction.getAcctNumber().trim()) == account.getNumber() &amp;&amp; transaction.getAccountName().trim().equals(account.getName())){</b>
+<i>215</i>&nbsp;                    // Initially checking if account status is set to disabled
+<b class="nc"><i>216</i>&nbsp;                    if(account.getAccountStatus().trim().equals(&quot;D&quot;)){</b>
+<b class="nc"><i>217</i>&nbsp;                        System.out.println(&quot;ERROR: Account status for account &quot; + account.getNumber() + &quot; &quot; + account.getName() + &quot; is disabled&quot;);</b>
+<b class="nc"><i>218</i>&nbsp;                        continue;</b>
+<i>219</i>&nbsp;                    }
+<i>220</i>&nbsp;                    // This will skip the transaction for the account where money is being transferred. 
+<b class="nc"><i>221</i>&nbsp;                    if(transferLast){</b>
+<b class="nc"><i>222</i>&nbsp;                        transferLast = false;</b>
+<b class="nc"><i>223</i>&nbsp;                        continue;</b>
+<i>224</i>&nbsp;                    }
+<i>225</i>&nbsp;                    /* Checking if transaction is one of:
+<i>226</i>&nbsp;                       01 - withdrawal
+<i>227</i>&nbsp;                       02 - transfer
+<i>228</i>&nbsp;                       03 - paybill
+<i>229</i>&nbsp;                       Applying transactions which withdraw money from the account
+<i>230</i>&nbsp;                       If the type matches 01-03 and the balance will not go into the negative range
+<i>231</i>&nbsp;                       after the transaction has been applied then the transaction occurs.
+<i>232</i>&nbsp;                     */
+<b class="nc"><i>233</i>&nbsp;                    if((transaction.getTransactionType().trim().equals(&quot;01&quot;)</b>
+<b class="nc"><i>234</i>&nbsp;                       || transaction.getTransactionType().trim().equals(&quot;02&quot;)</b>
+<b class="nc"><i>235</i>&nbsp;                       || transaction.getTransactionType().trim().equals(&quot;03&quot;))</b>
+<i>236</i>&nbsp;                       &amp;&amp; (currentBalance - transactionAmount - normalDebit) &gt; 0.00
+<b class="nc"><i>237</i>&nbsp;                       &amp;&amp; account.getAccountStatus().trim().equals(&quot;A&quot;)){</b>
+<b class="nc"><i>238</i>&nbsp;                        if(account.getStudentPlan()) {</b>
+<b class="nc"><i>239</i>&nbsp;                            account.setBalance(roundFloat(currentBalance - transactionAmount - studentDebit, 2));</b>
+<b class="nc"><i>240</i>&nbsp;                            if(i+1 &lt; accounts.size()) {</b>
+<b class="nc"><i>241</i>&nbsp;                                Account transferTo = accounts.get(i + 1);</b>
+<b class="nc"><i>242</i>&nbsp;                                float transferToBalance = transferTo.getBalance();</b>
+<b class="nc"><i>243</i>&nbsp;                                if(transferTo.getAccountStatus().trim().equals(&quot;A&quot;)</b>
+<b class="nc"><i>244</i>&nbsp;                                   &amp;&amp; transaction.getTransactionType().trim().equals(&quot;02&quot;)</b>
+<i>245</i>&nbsp;                                   &amp;&amp; (transferToBalance + transactionAmount &lt;= 100000)){
+<b class="nc"><i>246</i>&nbsp;                                    transferTo.setBalance(transferToBalance + transactionAmount);</b>
+<b class="nc"><i>247</i>&nbsp;                                    transferLast = true;</b>
+<i>248</i>&nbsp;                                    
+<i>249</i>&nbsp;                                }
+<b class="nc"><i>250</i>&nbsp;                            }</b>
+<i>251</i>&nbsp;                        }else{
+<b class="nc"><i>252</i>&nbsp;                            account.setBalance(roundFloat(currentBalance - transactionAmount - normalDebit, 2));</b>
+<b class="nc"><i>253</i>&nbsp;                            if(i+1 &lt; accounts.size()) {</b>
+<b class="nc"><i>254</i>&nbsp;                                Account transferTo = accounts.get(i + 1);</b>
+<b class="nc"><i>255</i>&nbsp;                                float transferToBalance = transferTo.getBalance();</b>
+<b class="nc"><i>256</i>&nbsp;                                if(transferTo.getAccountStatus().trim().equals(&quot;A&quot;)</b>
+<b class="nc"><i>257</i>&nbsp;                                        &amp;&amp; transaction.getTransactionType().trim().equals(&quot;02&quot;)</b>
+<i>258</i>&nbsp;                                        &amp;&amp; (transferToBalance + transactionAmount &lt;= 100000)){
+<b class="nc"><i>259</i>&nbsp;                                    transferTo.setBalance(transferToBalance + transactionAmount);</b>
+<b class="nc"><i>260</i>&nbsp;                                    transferLast = true;</b>
+<i>261</i>&nbsp;                                    
+<i>262</i>&nbsp;                                }
+<i>263</i>&nbsp;                            }
+<i>264</i>&nbsp;                        }
+<b class="nc"><i>265</i>&nbsp;                        account.setTransactionCount(account.getTransactions()+1);</b>
+<i>266</i>&nbsp;                    /*Checking if transaction is one of:
+<i>267</i>&nbsp;                    01 - withdrawal
+<i>268</i>&nbsp;                    02 - transfer
+<i>269</i>&nbsp;                    03 - paybill
+<i>270</i>&nbsp;                    &amp; if the transaction will put the account below a balance of zero (including debiting fee)
+<i>271</i>&nbsp;                    Will output an error in the console letting you know an insufficient funds error has occurred. 
+<i>272</i>&nbsp;                    */
+<i>273</i>&nbsp;                     
+<b class="nc"><i>274</i>&nbsp;                    }else if(transaction.getTransactionType().trim().equals(&quot;01&quot;)</b>
+<b class="nc"><i>275</i>&nbsp;                            || transaction.getTransactionType().trim().equals(&quot;02&quot;)</b>
+<b class="nc"><i>276</i>&nbsp;                            || transaction.getTransactionType().trim().equals(&quot;03&quot;)</b>
+<i>277</i>&nbsp;                            &amp;&amp; (currentBalance - transactionAmount - normalDebit) &lt; 0.00
+<b class="nc"><i>278</i>&nbsp;                            &amp;&amp; account.getAccountStatus().equals(&quot;A&quot;)){</b>
+<b class="nc"><i>279</i>&nbsp;                        System.out.println(&quot;ERROR: Insufficient funds to process transaction for &quot; + account.getName()</b>
+<b class="nc"><i>280</i>&nbsp;                                + &quot; &quot; + account.getNumber() + &quot;. Only have &quot; + account.getBalance()</b>
+<b class="nc"><i>281</i>&nbsp;                                + &quot; need &quot; + Float.parseFloat(transaction.getFunds()) + &quot; funds.&quot;);</b>
+<b class="nc"><i>282</i>&nbsp;                        continue;</b>
+<i>283</i>&nbsp;                    }
+<i>284</i>&nbsp;                    /* The deposit transaction 04
+<i>285</i>&nbsp;                       Checks if transaction amount plus the current balance will put the balance over maximum specified
+<i>286</i>&nbsp;                       Also checks if current balance + transaction amount - the debit fee is over 0.00
+<i>287</i>&nbsp;                       Important for edge cases where say the account has 0.02 current balance and the user deposits 0.01
+<i>288</i>&nbsp;                       the debiting fee will then put the user into the negative range.
+<i>289</i>&nbsp;                     */
+<i>290</i>&nbsp;                    
+<b class="nc"><i>291</i>&nbsp;                    if(transaction.getTransactionType().trim().equals(&quot;04&quot;)</b>
+<i>292</i>&nbsp;                       &amp;&amp; (currentBalance + transactionAmount) &lt; 100000
+<i>293</i>&nbsp;                       &amp;&amp; (currentBalance + transactionAmount - normalDebit) &gt; 0.00){
+<b class="nc"><i>294</i>&nbsp;                        if(account.getStudentPlan()) {</b>
+<b class="nc"><i>295</i>&nbsp;                            account.setBalance(roundFloat(account.getBalance() + transactionAmount - studentDebit,2));</b>
+<b class="nc"><i>296</i>&nbsp;                        }else{account.setBalance(roundFloat(account.getBalance() + transactionAmount - normalDebit, 2));}</b>
+<b class="nc"><i>297</i>&nbsp;                        account.setTransactionCount(account.getTransactions()+1);</b>
+<i>298</i>&nbsp;
+<i>299</i>&nbsp;                    }
+<i>300</i>&nbsp;                    // If account number and account name are equivalent we know that this account already exists
+<b class="nc"><i>301</i>&nbsp;                    if(transaction.getTransactionType().trim().equals(&quot;05&quot;)){</b>
+<b class="nc"><i>302</i>&nbsp;                        System.out.println(&quot;ERROR: Account creation failed. Account &quot;</b>
+<b class="nc"><i>303</i>&nbsp;                                + account.getNumber() + &quot; under &quot; + account.getName() + &quot; already exists.&quot;);</b>
+<i>304</i>&nbsp;                        
+<i>305</i>&nbsp;                    }
+<i>306</i>&nbsp;                    // Delete transaction, will delete account from list once transaction occurs.
+<b class="nc"><i>307</i>&nbsp;                    if(transaction.getTransactionType().trim().equals(&quot;06&quot;)){</b>
+<b class="nc"><i>308</i>&nbsp;                        accounts.remove(account);</b>
+<i>309</i>&nbsp;                        
+<i>310</i>&nbsp;                    }
+<i>311</i>&nbsp;                    // Disable account transaction
+<b class="nc"><i>312</i>&nbsp;                    if(transaction.getTransactionType().trim().equals(&quot;07&quot;)){</b>
+<b class="nc"><i>313</i>&nbsp;                        account.setIsActive(&quot;D &quot;);</b>
+<b class="nc"><i>314</i>&nbsp;                        account.setTransactionCount(account.getTransactions() + 1);</b>
+<i>315</i>&nbsp;                    }
+<b class="nc"><i>316</i>&nbsp;                    if(transaction.getTransactionType().trim().equals(&quot;08&quot;)){</b>
+<b class="nc"><i>317</i>&nbsp;                        if(account.getStudentPlan()){</b>
+<b class="nc"><i>318</i>&nbsp;                            account.setStudentPlan(false);</b>
+<b class="nc"><i>319</i>&nbsp;                            account.setTransactionCount(account.getTransactions() + 1);</b>
+<i>320</i>&nbsp;                        }else{
+<b class="nc"><i>321</i>&nbsp;                            account.setStudentPlan(true);</b>
+<b class="nc"><i>322</i>&nbsp;                            account.setTransactionCount(account.getTransactions() + 1);</b>
+<i>323</i>&nbsp;                        }
+<i>324</i>&nbsp;                    }
+<i>325</i>&nbsp;
+<i>326</i>&nbsp;                }
+<b class="nc"><i>327</i>&nbsp;                if(transaction.getTransactionType().trim().equals(&quot;05&quot;)</b>
+<b class="nc"><i>328</i>&nbsp;                   &amp;&amp; i == accounts.size() - 1){</b>
+<b class="nc"><i>329</i>&nbsp;                    Account newAccount = new Account(</b>
+<b class="nc"><i>330</i>&nbsp;                            Integer.parseInt(transaction.getAcctNumber().trim()),</b>
+<b class="nc"><i>331</i>&nbsp;                            transaction.getAccountName(),</b>
+<i>332</i>&nbsp;                            &quot;A &quot;,
+<b class="nc"><i>333</i>&nbsp;                            Float.parseFloat(transaction.getFunds().trim()),</b>
+<i>334</i>&nbsp;                            0
+<i>335</i>&nbsp;                            
+<i>336</i>&nbsp;                    );
+<b class="nc"><i>337</i>&nbsp;                    newAccountList.add(newAccount);</b>
+<i>338</i>&nbsp;                }
+<i>339</i>&nbsp;                
+<i>340</i>&nbsp;            }
+<i>341</i>&nbsp;            
+<i>342</i>&nbsp;            
+<b class="nc"><i>343</i>&nbsp;        }</b>
+<i>344</i>&nbsp;        // Returns the list of accounts in order of account number
+<b class="nc"><i>345</i>&nbsp;        accounts.addAll(newAccountList);</b>
+<b class="nc"><i>346</i>&nbsp;        Collections.sort(accounts, new Comparator&lt;Account&gt;() {</b>
+<i>347</i>&nbsp;            @Override
+<i>348</i>&nbsp;            public int compare(Account o1, Account o2) {
+<b class="nc"><i>349</i>&nbsp;                return Integer.compare(o1.number, o2.number);</b>
+<i>350</i>&nbsp;            }
+<i>351</i>&nbsp;        });
+<b class="nc"><i>352</i>&nbsp;        return accounts;</b>
+<i>353</i>&nbsp;    }
+<i>354</i>&nbsp;    
+<i>355</i>&nbsp;
+<i>356</i>&nbsp;
+<i>357</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-04-06 13:09</div>
+</div>
+</body>
+</html>

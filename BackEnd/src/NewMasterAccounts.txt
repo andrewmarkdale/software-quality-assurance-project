@@ -1,0 +1,3 @@
+00001 transaction1         A 00000.00 0000
+07426 transaction2         A 00000.00 0000
+07824 transaction3         A 00000.00 0000

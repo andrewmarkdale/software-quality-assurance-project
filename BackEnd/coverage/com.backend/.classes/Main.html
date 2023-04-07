@@ -1,0 +1,106 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Main</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.backend</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Main (com.backend)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Main</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.backend;
+<i>2</i>&nbsp;import java.io.*;
+<i>3</i>&nbsp;import java.io.IOException;
+<i>4</i>&nbsp;import java.nio.file.Path;
+<i>5</i>&nbsp;import java.nio.file.Paths;
+<i>6</i>&nbsp;
+<b class="nc"><i>7</i>&nbsp;public class Main {</b>
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;    public static void main(String[] args) throws IOException {
+<i>10</i>&nbsp;
+<b class="nc"><i>11</i>&nbsp;        Bank testing = new Bank();</b>
+<b class="nc"><i>12</i>&nbsp;        Path relative = Paths.get(&quot;TransactionFiles&quot;);</b>
+<b class="nc"><i>13</i>&nbsp;        testing.mergeFiles(</b>
+<b class="nc"><i>14</i>&nbsp;                relative.toString(),</b>
+<i>15</i>&nbsp;                &quot;Merged_Transactions.txt&quot;
+<i>16</i>&nbsp;        );
+<i>17</i>&nbsp;
+<b class="nc"><i>18</i>&nbsp;        testing.allAccounts = testing.readAccounts(&quot;NewMasterAccounts.txt&quot;);</b>
+<b class="nc"><i>19</i>&nbsp;        testing.allTransactions = testing.readTransactions(&quot;sessiontransactions.txt&quot;);</b>
+<b class="nc"><i>20</i>&nbsp;        testing.allAccounts = testing.applyTransactions(testing.allAccounts, testing.allTransactions);</b>
+<b class="nc"><i>21</i>&nbsp;        testing.exportNewAccounts(testing.allAccounts, &quot;NewMasterAccounts.txt&quot;);</b>
+<i>22</i>&nbsp;    }
+<i>23</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-04-06 13:09</div>
+</div>
+</body>
+</html>
